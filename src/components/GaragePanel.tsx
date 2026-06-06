@@ -1,7 +1,6 @@
 import type {AppDispatch, RootState} from "../store/store.ts";
 import {useEffect, useMemo, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-
 import {PAGE_LIMIT, PAGE_START} from "../constants/constant.ts";
 import CarControlEvents from "./car-race-panel/CarControlEvents.tsx";
 import CarSvg from "../UI/CarSvg.tsx";

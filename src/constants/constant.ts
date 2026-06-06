@@ -18,3 +18,5 @@ export const FORM_INITIAL_STATE = {
     name: '',
     color: DEFAULT_COLOR
 }
+
+export const MAX_TIME_HIDDEN = 3000;
