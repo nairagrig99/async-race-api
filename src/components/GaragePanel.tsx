@@ -1,10 +1,11 @@
-import type { RootState} from "../store/store.ts";
+import type {AppDispatch, RootState} from "../store/store.ts";
 import {useEffect, useMemo, useRef, useState} from "react";
-import { useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 
 import {PAGE_LIMIT, PAGE_START} from "../constants/constant.ts";
 import CarControlEvents from "./car-race-panel/CarControlEvents.tsx";
 import CarSvg from "../UI/CarSvg.tsx";
+import {resetEngineState} from "../store/EngineState.ts";
 
 type racingState = {
     racingPanel: (paginatedCar: HTMLDivElement[]) => void
@@ -14,7 +15,11 @@ export default function CarPanel({racingPanel}: racingState) {
     const getCarList = useSelector((state: RootState) => state.carSlice.car);
     const [page, setPage] = useState<number>(PAGE_START);
     const garageLength: number = getCarList.length;
+    const dispatch = useDispatch<AppDispatch>()
 
+    useEffect(() => {
+        dispatch(resetEngineState())
+    }, [page, dispatch]);
 
     const carList = useMemo(() => {
         const start = (page - PAGE_START) * PAGE_LIMIT;
@@ -25,7 +30,6 @@ export default function CarPanel({racingPanel}: racingState) {
         } else {
             return getCarList.slice(start, end);
         }
-
     }, [getCarList, page]);
 
     useEffect(() => {
@@ -90,6 +94,5 @@ export default function CarPanel({racingPanel}: racingState) {
             </div>
         </div>
     </div>
-
 }
 

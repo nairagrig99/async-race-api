@@ -1,1 +1,21 @@
 @import "tailwindcss";
+
+@layer components {
+    .menu-btn {
+        @apply px-7 py-3 rounded-[5px] bg-black text-white rounded;
+    }
+}
+
+.race-car {
+    position: relative;
+    left:0;
+}
+
+@keyframes moveRight {
+    from {
+        left: 10%;
+    }
+    to {
+        left: calc(100% - 30px);
+    }
+}
