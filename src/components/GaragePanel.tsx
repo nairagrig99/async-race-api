@@ -6,6 +6,8 @@ import {PAGE_LIMIT, PAGE_START} from "../constants/constant.ts";
 import CarControlEvents from "./car-race-panel/CarControlEvents.tsx";
 import CarSvg from "../UI/CarSvg.tsx";
 import {resetEngineState} from "../store/EngineState.ts";
+import PaginationPanel from "./car-race-panel/PaginationPanel.tsx";
+import {Pagination} from "../enums/pagination.ts";
 
 type racingState = {
     racingPanel: (paginatedCar: HTMLDivElement[]) => void
@@ -31,7 +33,13 @@ export default function CarPanel({racingPanel}: racingState) {
             return getCarList.slice(start, end);
         }
     }, [getCarList, page]);
-
+    const pagination = (direction: string) => {
+        if (direction === Pagination.NEXT && page * PAGE_LIMIT < getCarList.length) {
+            setPage(prevState => prevState + PAGE_START)
+        } else if (direction === Pagination.PREV && page > PAGE_START) {
+            setPage(prevState => prevState - PAGE_START);
+        }
+    }
     useEffect(() => {
         racingPanel(carsRef.current);
     }, [carList]);
@@ -93,6 +101,7 @@ export default function CarPanel({racingPanel}: racingState) {
                 }
             </div>
         </div>
+        <PaginationPanel garageLength={garageLength} page={page} pagination={pagination} paginationName='Garage'/>
     </div>
 }
 
