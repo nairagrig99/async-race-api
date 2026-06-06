@@ -134,7 +134,6 @@ export default function CarModal({carListRace}: RacingState) {
     }
 
 
-
     const stopRacing = (el: HTMLElement) => {
         if (el) {
             const carElement = el.querySelector(".race-car") as HTMLElement;

@@ -30,4 +30,4 @@ const modalSlice = createSlice({
 });
 
 export const {openCarModal, closeCarModal} = modalSlice.actions;
-export default modalSlice;
+export default modalSlice.reducer;
