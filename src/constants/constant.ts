@@ -11,5 +11,10 @@ export const CAR_MODELS = [
     "Model S", "Mustang", "Civic", "A4", "Camry",
     "X5", "Corolla", "Huracan", "Passat", "Sonata"
 ];
-
+export const DEFAULT_COLOR = '#000000';
 export const RGB_COLOR=16777215;
+
+export const FORM_INITIAL_STATE = {
+    name: '',
+    color: DEFAULT_COLOR
+}
