@@ -3,7 +3,7 @@ import type {AppDispatch, RootState} from "../../store/store.ts";
 import {useEffect, useRef} from "react";
 import {resetEngineState, startCar, startRaceMode, stopCar, stopRace} from "../../store/EngineState.ts";
 import {ButtonType} from "../../enums/button-type.ts";
-import {CAR_BRANDS, CAR_MODELS, PAGE_END, RGB_COLOR} from "../../constants/constant.ts";
+import {CAR_BRANDS, CAR_MODELS, MAX_TIME_HIDDEN, PAGE_END, RGB_COLOR} from "../../constants/constant.ts";
 import {createCar} from "../../services/GarageService.ts";
 import {ErrorMessage} from "../../enums/error-message.ts";
 import {ServerURL} from "../../enums/request-url.ts";
@@ -11,13 +11,20 @@ import Button from "../../UI/Button.tsx";
 import {ButtonStyleEnum} from "../../enums/button-style.ts";
 import {openCarModal} from "../../store/ModalSlice.ts";
 import type {RacingState} from "../../interface/racing-state.ts";
+import type {WinnerModel} from "../../interface/winner-state.ts";
+import {hideWinnerModal, showWinnerModal} from "../../store/WinnerModalSlice.ts";
+import {setWinners, updateWinners} from "../../services/WinnersService.ts";
+import {EngineService} from "../../services/EngineService.ts";
 
 export default function CarModal({carListRace}: RacingState) {
     const dispatch = useDispatch<AppDispatch>();
     const selector = useSelector((state: RootState) => state.carRaceStartSlice);
     const engineState = useSelector((state: RootState) => state.engineStateSlice);
+    const winners = useSelector((state: RootState) => state.winnerSlice.winners);
+    const carList = useSelector((state: RootState) => state.carSlice.car);
 
     const timeOutRef = useRef<Set<number>>(new Set());
+    let firstIsWinner = 1;
 
     useEffect(() => {
     }, [engineState]);
@@ -36,7 +43,7 @@ export default function CarModal({carListRace}: RacingState) {
         if (carElement && carElement.dataset.id) {
             if (selector.mode === ButtonType.START) {
                 const elementIndex = +carElement.dataset.id;
-                startRace(carElement, elementIndex);
+                startRace(carElement, elementIndex, false);
                 dispatch(stopCar(false))
                 dispatch(stopRace(false))
             } else {
@@ -94,8 +101,47 @@ export default function CarModal({carListRace}: RacingState) {
         })
         timeOutRef.current.clear()
     }
+    const handleWinnerFetch = (winner: WinnerModel) => {
+        const existingWinner = winners.find(winnerCar => winnerCar.id === winner.id);
+        if (existingWinner) {
+            dispatch(updateWinners({
+                ...existingWinner,
+                wins: existingWinner.wins + 1,
+                time: winner.time
+            })).then((response) => {
+                openWinnerPopup(response.payload)
+            })
+        } else {
+            dispatch(setWinners({
+                id: winner.id,
+                wins: winner.wins,
+                time: winner.time
+            })).then((response) => {
+                openWinnerPopup(response.payload)
+            });
+        }
+    }
 
-    const startRace = (el: HTMLElement, id: number) => {
+    const openWinnerPopup = (winnerCar: WinnerModel) => {
+        const findWinner = carList.find((car) => car.id === winnerCar.id);
+        if (findWinner) {
+            const winner = {
+                ...winnerCar,
+                name: findWinner.name
+            }
+            dispatch(showWinnerModal(winner))
+            dispatch(stopCar(false))
+            dispatch(stopRace(false))
+        }
+
+        const timeout = setTimeout(() => {
+            dispatch(hideWinnerModal())
+        }, MAX_TIME_HIDDEN)
+
+        timeOutRef.current.add(timeout)
+    }
+
+    const startRace = (el: HTMLElement, id: number, isIndividualCar: boolean = true) => {
 
         fetch(`${ServerURL.URL}/engine?id=${id}&status=started`, {method: "PATCH"})
             .then(async (res) => {
@@ -107,21 +153,33 @@ export default function CarModal({carListRace}: RacingState) {
                 const durationSeconds = velocityTime / 1000;
                 return {durationSeconds}
             }).then(({durationSeconds}) => {
+            let isWinnerBroken = true;
             fetch(`${ServerURL.URL}/engine?id=${id}&status=drive`, {method: "PATCH"})
                 .then((driveRes) => {
                     if (!driveRes.ok && driveRes.status === 500) {
-
+                        isWinnerBroken = false;
                         stopRacingOnTheWay(el);
                     }
                 });
 
-            return {durationSeconds}
-        }).then(({durationSeconds}) => {
+            return {durationSeconds, isWinnerBroken}
+        }).then(({durationSeconds, isWinnerBroken}) => {
             const carElement = el.querySelector(".race-car") as HTMLElement;
             carElement.style.position = "absolute";
             carElement.style.animation = `moveRight ${durationSeconds}s linear forwards`;
             const handleAnimationEnd = () => {
                 carElement.removeEventListener("animationend", handleAnimationEnd);
+                if (firstIsWinner === 1 && isWinnerBroken && isIndividualCar) {
+                    handleWinnerFetch({
+                        id: id,
+                        time: durationSeconds,
+                        wins: 1,
+                    });
+                } else {
+                    dispatch(EngineService(id))
+                }
+                firstIsWinner++;
+
             };
             carElement.addEventListener("animationend", handleAnimationEnd);
         })
@@ -133,7 +191,6 @@ export default function CarModal({carListRace}: RacingState) {
         }
     }
 
-
     const stopRacing = (el: HTMLElement) => {
         if (el) {
             const carElement = el.querySelector(".race-car") as HTMLElement;
@@ -143,6 +200,7 @@ export default function CarModal({carListRace}: RacingState) {
             }
         }
     }
+
 
     return <div className="border-b border-solid pb-[30px] flex-wrap gap-2.5 flex justify-between">
         <div className="flex gap-2.5">

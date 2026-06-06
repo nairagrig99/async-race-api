@@ -4,8 +4,9 @@ import type {RootState} from "../store/store.ts";
 import CarPanel from "../components/GaragePanel.tsx";
 import CarModal from "../components/car-race-panel/CarModal.tsx";
 import CreateCarModal from "../components/car-race-panel/CreateCar.tsx";
+import WinnerModal from "../components/car-race-panel/WinnerModal.tsx";
 
-export default function GaragePage(){
+export default function GaragePage() {
     const [carListRace, setCarListRace] = useState<HTMLDivElement[]>([])
     const selector = useSelector((state: RootState) => state.carSlice.car);
 
@@ -21,5 +22,6 @@ export default function GaragePage(){
         <CarModal carListRace={carListRace}/>
         <CarPanel racingPanel={carListForRacing}/>
         <CreateCarModal/>
+        <WinnerModal/>
     </div>
 }
