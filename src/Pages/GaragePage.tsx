@@ -2,6 +2,7 @@ import {useState} from "react";
 import {useSelector} from "react-redux";
 import type {RootState} from "../store/store.ts";
 import CarPanel from "../components/GaragePanel.tsx";
+import CarModal from "../components/car-race-panel/CarModal.tsx";
 
 export default function GaragePage(){
     const [carListRace, setCarListRace] = useState<HTMLDivElement[]>([])
@@ -16,8 +17,7 @@ export default function GaragePage(){
 
     return <div>
         <h3 className="text-[45px] mb-3">GARAGE</h3>
-
+        <CarModal carListRace={carListRace}/>
         <CarPanel racingPanel={carListForRacing}/>
-
     </div>
 }

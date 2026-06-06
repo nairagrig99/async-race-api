@@ -6,13 +6,16 @@ import Button from "../../UI/Button.tsx";
 import {ButtonStyleEnum} from "../../enums/button-style.ts";
 import {ButtonType} from "../../enums/button-type.ts";
 import type {CarModelInterface} from "../../interface/car-modal.ts";
+import {openCarModal} from "../../store/ModalSlice.ts";
+import {startCarRacing, stopCarRacing} from "../../store/UnicCarRaceStart.ts";
+import {startRaceMode, stopCar, stopRace} from "../../store/EngineState.ts";
 
 export default function CarControlEvents({car}: { car: CarModelInterface }) {
     const dispatch = useDispatch<AppDispatch>()
     const selector = useSelector((state: RootState) => state.engineStateSlice)
     const [stopState, setStopState] = useState<boolean>(true);
     const editCar = () => {
-
+        dispatch(openCarModal({mode: ButtonType.EDIT, car: car}))
     }
     const removeCarFromList = () => {
         if (car.id != undefined) {
@@ -21,16 +24,21 @@ export default function CarControlEvents({car}: { car: CarModelInterface }) {
     }
     const startRacing = () => {
         if (car.id != undefined) {
-
+            dispatch(startCarRacing(car.id))
+            dispatch(stopCar(false))
+            dispatch(startRaceMode(true))
+            dispatch(stopRace(true))
             setStopState(false)
         }
     }
     const stopRacing = () => {
         if (car.id != undefined) {
+            dispatch(stopCarRacing(car.id))
             setStopState(true)
+            dispatch(startRaceMode(false))
+            dispatch(stopRace(true))
         }
     }
-
     return <div className="flex gap-2 h-[70px]">
         <div className="flex flex-col gap-2">
             <Button onClick={editCar}
