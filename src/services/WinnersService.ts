@@ -5,8 +5,8 @@ import {CRUD} from "../enums/crud.ts";
 import type {WinnerModel} from "../interface/winner-state.ts";
 
 export const getWinners = createAsyncThunk('get/winners', async () => {
-    const response = await fetch(`${ServerURL.URL}/winners`,{
-        method:CRUD.GET
+    const response = await fetch(`${ServerURL.URL}/winners`, {
+        method: CRUD.GET
     })
     if (!response.ok) {
         throw new Error(ErrorMessage.FAILED_GETTING)
@@ -31,6 +31,7 @@ export const updateWinners = createAsyncThunk('update/winners', async (winners: 
     return await response.json();
 })
 export const setWinners = createAsyncThunk('set/winners', async (winners: WinnerModel) => {
+
     const response = await fetch(`${ServerURL.URL}/winners`, {
         method: CRUD.POST,
         headers: {

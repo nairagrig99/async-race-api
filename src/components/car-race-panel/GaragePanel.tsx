@@ -7,6 +7,7 @@ import CarSvg from "../../UI/CarSvg.tsx";
 import {resetEngineState} from "../../store/EngineState.ts";
 import PaginationPanel from "./PaginationPanel.tsx";
 import {Pagination} from "../../enums/pagination.ts";
+import {pageState} from "../../store/PageState.ts";
 
 type racingState = {
     racingPanel: (paginatedCar: HTMLDivElement[]) => void
@@ -14,12 +15,15 @@ type racingState = {
 export default function CarPanel({racingPanel}: racingState) {
     const carsRef = useRef<HTMLDivElement[]>([]);
     const getCarList = useSelector((state: RootState) => state.carSlice.car);
-    const [page, setPage] = useState<number>(PAGE_START);
+    const savedPage = useSelector((state: RootState) => state.pageStateSlice.page);
+
+    const [page, setPage] = useState<number>(savedPage || PAGE_START);
     const garageLength: number = getCarList.length;
     const dispatch = useDispatch<AppDispatch>()
 
     useEffect(() => {
-        dispatch(resetEngineState())
+        dispatch(resetEngineState());
+        dispatch(pageState(page));
     }, [page, dispatch]);
 
     const carList = useMemo(() => {
@@ -39,6 +43,7 @@ export default function CarPanel({racingPanel}: racingState) {
             setPage(prevState => prevState - PAGE_START);
         }
     }
+
     useEffect(() => {
         racingPanel(carsRef.current);
     }, [carList]);

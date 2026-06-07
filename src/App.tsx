@@ -4,6 +4,7 @@ import {useEffect} from "react";
 import {getCars} from "./services/GarageService.ts";
 import {Outlet} from "react-router-dom";
 import Menu from "./components/shared/Menu.tsx";
+import {getWinners} from "./services/WinnersService.ts";
 
 
 function App() {
@@ -11,7 +12,7 @@ function App() {
 
   useEffect(() => {
     dispatch(getCars());
-    // dispatch(getWinners());
+    dispatch(getWinners());
   }, [dispatch])
 
   return <div className="p-10">

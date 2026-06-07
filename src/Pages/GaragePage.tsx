@@ -5,17 +5,17 @@ import CarPanel from "../components/car-race-panel/GaragePanel.tsx";
 import CarModal from "../components/car-race-panel/CarModal.tsx";
 import CreateCarModal from "../components/car-race-panel/CreateCar.tsx";
 import WinnerModal from "../components/car-race-panel/WinnerModal.tsx";
+import EmptyGarage from "../components/car-race-panel/EmptyGarage.tsx";
 
 export default function GaragePage() {
     const [carListRace, setCarListRace] = useState<HTMLDivElement[]>([])
     const selector = useSelector((state: RootState) => state.carSlice.car);
 
     const carListForRacing = (carList: HTMLDivElement[]) => {
-        if (carList.length) {
-            setCarListRace(carList);
-        }
+        if (carList.length) setCarListRace(carList);
     }
-    if (!selector.length) return <h3 className="text-[45px] text-center">No Cars</h3>
+
+    if (!selector.length) return <EmptyGarage/>
 
     return <div>
         <h3 className="text-[45px] mb-3">GARAGE</h3>
