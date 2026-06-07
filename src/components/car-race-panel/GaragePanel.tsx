@@ -1,12 +1,12 @@
-import type {AppDispatch, RootState} from "../store/store.ts";
+import type {AppDispatch, RootState} from "../../store/store.ts";
 import {useEffect, useMemo, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {PAGE_LIMIT, PAGE_START} from "../constants/constant.ts";
-import CarControlEvents from "./car-race-panel/CarControlEvents.tsx";
-import CarSvg from "../UI/CarSvg.tsx";
-import {resetEngineState} from "../store/EngineState.ts";
-import PaginationPanel from "./car-race-panel/PaginationPanel.tsx";
-import {Pagination} from "../enums/pagination.ts";
+import {PAGE_LIMIT, PAGE_START} from "../../constants/constant.ts";
+import CarControlEvents from "./CarControlEvents.tsx";
+import CarSvg from "../../UI/CarSvg.tsx";
+import {resetEngineState} from "../../store/EngineState.ts";
+import PaginationPanel from "./PaginationPanel.tsx";
+import {Pagination} from "../../enums/pagination.ts";
 
 type racingState = {
     racingPanel: (paginatedCar: HTMLDivElement[]) => void

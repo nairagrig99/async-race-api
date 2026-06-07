@@ -1,7 +1,7 @@
 import {useState} from "react";
 import {useSelector} from "react-redux";
 import type {RootState} from "../store/store.ts";
-import CarPanel from "../components/GaragePanel.tsx";
+import CarPanel from "../components/car-race-panel/GaragePanel.tsx";
 import CarModal from "../components/car-race-panel/CarModal.tsx";
 import CreateCarModal from "../components/car-race-panel/CreateCar.tsx";
 import WinnerModal from "../components/car-race-panel/WinnerModal.tsx";
