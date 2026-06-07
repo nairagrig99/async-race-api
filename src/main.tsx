@@ -12,12 +12,12 @@ import PageProvider from "./contextStore/PageProvider.tsx";
 
 export const router = createBrowserRouter([
     {
-        path: '/',
+        path: '/async-race-api/',
         element: <App/>,
         children: [
-            { index: true, element: <Navigate to="/garage" replace /> },
-            {path: '/garage', element: <GaragePage/>},
-            {path: '/winners', element: <WinnersPage/>},
+            { index: true, element: <Navigate to="/async-race-api/garage" replace /> },
+            {path: 'garage', element: <GaragePage/>},
+            {path: 'winners', element: <WinnersPage/>},
         ]
     }
 ])

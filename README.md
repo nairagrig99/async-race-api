@@ -1,7 +1,7 @@
 
 **Deployed at: https://nairagrig99.github.io/async-race-api/**
 
-**Score: 350/400**
+**Score: 360/400**
 
 Basic Structure (40 points)
 ✅ Two Views (10 points)
@@ -17,11 +17,11 @@ Garage View (80 points)
 ✅ Pagination (10 points)
 ✅ EXTRA POINTS (10 points)
 
-Winners View (40 points)
+Winners View (50 points)
 ✅ Display Winners (15 points)
 ✅ Pagination for Winners (10 points)
 ✅ Winners Table (15 points)
-❌ Sorting Functionality (0 points)
+✅ Sorting Functionality (10 points)
 
 Race (170 points)
 ✅ Start Engine Animation (20 points)
