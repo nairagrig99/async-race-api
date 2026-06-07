@@ -18,6 +18,9 @@ export const router = createBrowserRouter([
             {path: '/garage', element: <GaragePage/>},
             {path: '/winners', element: <WinnersPage/>},
         ]
+    },
+    {
+        basename: '/',
     }
 ])
 
