@@ -20,3 +20,7 @@ export const FORM_INITIAL_STATE = {
 }
 
 export const MAX_TIME_HIDDEN = 3000;
+
+export const TABLE_TH="px-4 py-2 text-left hover:bg-blue-700 cursor-pointer border border-black px-4 py-2";
+export const TABLE_TD="px-4 py-2 border border-black px-4 py-2";
+
