@@ -2,7 +2,7 @@ import {StrictMode} from 'react'
 import {createRoot} from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
-import {createBrowserRouter, RouterProvider} from "react-router-dom";
+import {createBrowserRouter, Navigate, RouterProvider} from "react-router-dom";
 import GaragePage from "./Pages/GaragePage.tsx";
 import WinnersPage from "./Pages/WinnersPage.tsx";
 import {Provider} from "react-redux";
@@ -15,6 +15,7 @@ export const router = createBrowserRouter([
         path: '/',
         element: <App/>,
         children: [
+            { index: true, element: <Navigate to="/garage" replace /> },
             {path: '/garage', element: <GaragePage/>},
             {path: '/winners', element: <WinnersPage/>},
         ]
