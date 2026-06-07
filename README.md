@@ -1,5 +1,5 @@
 
-**Deployed at: https://nairagrig99.github.io/Async-race-api**
+**Deployed at: https://nairagrig99.github.io/async-race-api/**
 
 **Score: 350/400**
 
