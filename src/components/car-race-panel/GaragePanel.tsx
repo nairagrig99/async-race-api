@@ -43,6 +43,7 @@ export default function CarPanel({racingPanel}: racingState) {
             setPage(prevState => prevState - PAGE_START);
         }
     }
+
     useEffect(() => {
         racingPanel(carsRef.current);
     }, [carList]);

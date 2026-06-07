@@ -43,9 +43,6 @@ export const setWinners = createAsyncThunk('set/winners', async (winners: Winner
     if (!response.ok) {
         throw new Error(ErrorMessage.FAILED_GETTING)
     }
-    const data = await response.json()
 
-    console.log("dataaaaaaaaaaaa", data);
-
-    return data;
+    return await response.json();
 })

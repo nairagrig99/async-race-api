@@ -27,14 +27,10 @@ export default function CarModal({carListRace}: RacingState) {
     let firstIsWinner = 1;
 
     useEffect(() => {
-    }, [engineState]);
-
-    useEffect(() => {
         return () => {
             dispatch(resetEngineState());
         }
-    }, []);
-
+    }, [engineState]);
 
 
     const getRandomColor = () => "#" + Math.floor(Math.random() * RGB_COLOR).toString(16).padStart(6, "0")
@@ -93,7 +89,6 @@ export default function CarModal({carListRace}: RacingState) {
                 wins: existingWinner.wins + 1,
                 time: winner.time
             })).then((response) => {
-                console.log("response 1111111",response)
                 openWinnerPopup(response.payload)
             })
         } else {
@@ -102,7 +97,6 @@ export default function CarModal({carListRace}: RacingState) {
                 wins: winner.wins,
                 time: winner.time
             })).then((response) => {
-                console.log("response 222222",response)
                 openWinnerPopup(response.meta.arg)
             });
         }
@@ -187,6 +181,7 @@ export default function CarModal({carListRace}: RacingState) {
             }
         }
     }
+
     useEffect(() => {
         const carElement = carListRace.find(element =>
             element && element.dataset.id === selector.id.toString()
