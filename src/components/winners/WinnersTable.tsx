@@ -7,6 +7,7 @@ import type {CarModelInterface} from "../../interface/car-modal.ts";
 import {PAGE_LIMIT, PAGE_START, TABLE_TD, TABLE_TH} from "../../constants/constant.ts";
 import {Pagination} from "../../enums/pagination.ts";
 import PaginationPanel from "../car-race-panel/PaginationPanel.tsx";
+import {SortEnum} from "../../enums/sort.ts";
 
 
 type WinnerWithCar = WinnerModel & CarModelInterface;
@@ -50,6 +51,18 @@ export default function WinnersTable() {
 
     const winnersLength = winners.length;
 
+    const SortBy = (mode: string) => {
+        if (mode === SortEnum.TIME) {
+            setPaginatedWinners((prev) => {
+                return [...prev].sort((a, b) => a.time - b.time);
+            })
+        } else {
+            setPaginatedWinners((prev) => {
+                return [...prev].sort((a, b) => a.wins - b.wins);
+            })
+        }
+    }
+
     return (
         <div>
             <table
@@ -59,11 +72,11 @@ export default function WinnersTable() {
                     <th className={TABLE_TH}>ID</th>
                     <th className={TABLE_TH}>Car</th>
                     <th className={TABLE_TH}>Name</th>
-                    <th>
+                    <th onClick={() => SortBy(SortEnum.TIME)} className={TABLE_TH}>
                         Time (s)
                         <span className="ml-4">⇅</span>
                     </th>
-                    <th>
+                    <th onClick={() => SortBy(SortEnum.WINE)} className={TABLE_TH}>
                         Wins
                         <span className="ml-4">⇅</span>
                     </th>
