@@ -1,6 +1,6 @@
 import {useDispatch, useSelector} from "react-redux";
 import type {AppDispatch, RootState} from "../../store/store.ts";
-import {useEffect, useRef} from "react";
+import {useContext, useEffect, useRef} from "react";
 import {resetEngineState, startCar, startRaceMode, stopCar, stopRace} from "../../store/EngineState.ts";
 import {ButtonType} from "../../enums/button-type.ts";
 import {CAR_BRANDS, CAR_MODELS, MAX_TIME_HIDDEN, PAGE_END, RGB_COLOR} from "../../constants/constant.ts";
@@ -12,9 +12,9 @@ import {ButtonStyleEnum} from "../../enums/button-style.ts";
 import {openCarModal} from "../../store/ModalSlice.ts";
 import type {RacingState} from "../../interface/racing-state.ts";
 import type {WinnerModel} from "../../interface/winner-state.ts";
-import {hideWinnerModal, showWinnerModal} from "../../store/WinnerModalSlice.ts";
 import {setWinners, updateWinners} from "../../services/WinnersService.ts";
 import {EngineService} from "../../services/EngineService.ts";
+import {WinnerModalContext} from "../../contextStore/WinnerModalContext.tsx";
 
 export default function CarModal({carListRace}: RacingState) {
     const dispatch = useDispatch<AppDispatch>();
@@ -23,6 +23,7 @@ export default function CarModal({carListRace}: RacingState) {
     const winners = useSelector((state: RootState) => state.winnerSlice.winners);
     const carList = useSelector((state: RootState) => state.carSlice.car);
 
+    const winnerContext = useContext(WinnerModalContext)
     const timeOutRef = useRef<Set<number>>(new Set());
     let firstIsWinner = 1;
 
@@ -109,13 +110,13 @@ export default function CarModal({carListRace}: RacingState) {
                 ...winnerCar,
                 name: findWinner.name
             }
-            dispatch(showWinnerModal(winner))
+            winnerContext.showWinnerModal(winner)
             dispatch(stopCar(false))
             dispatch(stopRace(false))
         }
 
         const timeout = setTimeout(() => {
-            dispatch(hideWinnerModal())
+            winnerContext.hideWinnerModal()
         }, MAX_TIME_HIDDEN)
 
         timeOutRef.current.add(timeout)

@@ -1,5 +1,5 @@
 import type {AppDispatch, RootState} from "../../store/store.ts";
-import {useEffect, useMemo, useRef, useState} from "react";
+import {useContext, useEffect, useMemo, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {PAGE_LIMIT, PAGE_START} from "../../constants/constant.ts";
 import CarControlEvents from "./CarControlEvents.tsx";
@@ -7,7 +7,8 @@ import CarSvg from "../../UI/CarSvg.tsx";
 import {resetEngineState} from "../../store/EngineState.ts";
 import PaginationPanel from "./PaginationPanel.tsx";
 import {Pagination} from "../../enums/pagination.ts";
-import {pageState} from "../../store/PageState.ts";
+import {PageContext} from "../../contextStore/PageContext.tsx";
+
 
 type racingState = {
     racingPanel: (paginatedCar: HTMLDivElement[]) => void
@@ -15,15 +16,15 @@ type racingState = {
 export default function CarPanel({racingPanel}: racingState) {
     const carsRef = useRef<HTMLDivElement[]>([]);
     const getCarList = useSelector((state: RootState) => state.carSlice.car);
-    const savedPage = useSelector((state: RootState) => state.pageStateSlice.page);
+    const savedPage = useContext(PageContext);
 
-    const [page, setPage] = useState<number>(savedPage || PAGE_START);
+    const [page, setPage] = useState<number>(savedPage.state.page || PAGE_START);
     const garageLength: number = getCarList.length;
     const dispatch = useDispatch<AppDispatch>()
 
     useEffect(() => {
         dispatch(resetEngineState());
-        dispatch(pageState(page));
+        savedPage.pageState(page)
     }, [page, dispatch]);
 
     const carList = useMemo(() => {
