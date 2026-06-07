@@ -35,23 +35,7 @@ export default function CarModal({carListRace}: RacingState) {
         }
     }, []);
 
-    useEffect(() => {
-        const carElement = carListRace.find(element =>
-            element && element.dataset.id === selector.id.toString()
-        );
 
-        if (carElement && carElement.dataset.id) {
-            if (selector.mode === ButtonType.START) {
-                const elementIndex = +carElement.dataset.id;
-                startRace(carElement, elementIndex, false);
-                dispatch(stopCar(false))
-                dispatch(stopRace(false))
-            } else {
-                removeAllTimeouts();
-                stopRacing(carElement);
-            }
-        }
-    }, [selector.id, selector.mode]);
 
     const getRandomColor = () => "#" + Math.floor(Math.random() * RGB_COLOR).toString(16).padStart(6, "0")
 
@@ -109,6 +93,7 @@ export default function CarModal({carListRace}: RacingState) {
                 wins: existingWinner.wins + 1,
                 time: winner.time
             })).then((response) => {
+                console.log("response 1111111",response)
                 openWinnerPopup(response.payload)
             })
         } else {
@@ -117,7 +102,8 @@ export default function CarModal({carListRace}: RacingState) {
                 wins: winner.wins,
                 time: winner.time
             })).then((response) => {
-                openWinnerPopup(response.payload)
+                console.log("response 222222",response)
+                openWinnerPopup(response.meta.arg)
             });
         }
     }
@@ -159,6 +145,7 @@ export default function CarModal({carListRace}: RacingState) {
                     if (!driveRes.ok && driveRes.status === 500) {
                         isWinnerBroken = false;
                         stopRacingOnTheWay(el);
+                        dispatch(EngineService(id))
                     }
                 });
 
@@ -200,7 +187,23 @@ export default function CarModal({carListRace}: RacingState) {
             }
         }
     }
+    useEffect(() => {
+        const carElement = carListRace.find(element =>
+            element && element.dataset.id === selector.id.toString()
+        );
 
+        if (carElement && carElement.dataset.id) {
+            if (selector.mode === ButtonType.START) {
+                const elementIndex = +carElement.dataset.id;
+                startRace(carElement, elementIndex, false);
+                dispatch(stopCar(false))
+                dispatch(stopRace(false))
+            } else {
+                removeAllTimeouts();
+                stopRacing(carElement);
+            }
+        }
+    }, [selector.id, selector.mode]);
 
     return <div className="border-b border-solid pb-[30px] flex-wrap gap-2.5 flex justify-between">
         <div className="flex gap-2.5">
