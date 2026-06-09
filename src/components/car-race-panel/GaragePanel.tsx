@@ -8,6 +8,7 @@ import {resetEngineState} from "../../store/EngineState.ts";
 import PaginationPanel from "./PaginationPanel.tsx";
 import {Pagination} from "../../enums/pagination.ts";
 import {PageContext} from "../../contextStore/PageContext.tsx";
+import CarLoop from "./CarLoop.tsx";
 
 
 type racingState = {
@@ -83,27 +84,22 @@ export default function CarPanel({racingPanel}: racingState) {
             </div>
 
             <div className="w-full">
-                {carList.length > 0 &&
-                    carList.map((car) =>
-                        <div key={car.id}
-                             className=" flex items-center pl-5 text-[24px] uppercase text-[#c0c0b8] line-street h-[70px] border-b border-solid w-full">
-                            {car.name}
-                        </div>
-                    )
-                }
+                <CarLoop carList={carList}>
+                    {(car) => (<div
+                        className=" flex items-center pl-5 text-[24px] uppercase text-[#c0c0b8] line-street h-[70px] border-b border-solid w-full">
+                        {car.name}
+                    </div>)}
+                </CarLoop>
+
             </div>
 
             <div className="line-start w-[30px] flex items-center border-r border-l border-solid">
                 <h2 className="text-[30px] [writing-mode:sideways-rl] m-[-8px]">FINISH</h2>
             </div>
             <div className="w-[40px]">
-                {carList.length > 0 &&
-                    carList.map((car) =>
-                        <div key={car.id}
-                             className="flex  line-street h-[70px] border-b border-solid w-full">
-                        </div>
-                    )
-                }
+                <CarLoop carList={carList}>
+                    <div className="flex  line-street h-[70px] border-b border-solid w-full"></div>
+                </CarLoop>
             </div>
         </div>
         <PaginationPanel garageLength={garageLength} page={page} pagination={pagination} paginationName='Garage'/>
