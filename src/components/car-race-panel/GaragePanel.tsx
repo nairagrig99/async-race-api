@@ -10,7 +10,6 @@ import {Pagination} from "../../enums/pagination.ts";
 import {PageContext} from "../../contextStore/PageContext.tsx";
 import CarLoop from "./CarLoop.tsx";
 
-
 type racingState = {
     racingPanel: (paginatedCar: HTMLDivElement[]) => void
 }
@@ -24,6 +23,7 @@ export default function CarPanel({racingPanel}: racingState) {
     const dispatch = useDispatch<AppDispatch>()
 
     useEffect(() => {
+        dispatch(resetEngineState());
         dispatch(resetEngineState());
         savedPage.pageState(page)
     }, [page, dispatch]);
@@ -53,31 +53,30 @@ export default function CarPanel({racingPanel}: racingState) {
     return <div className="border border-solid border-r-0">
         <div className="flex border border-solid  border-r-0 pl-2.5 relative pt-2.5">
             <div>
-                {carList.length > 0 &&
-                    carList.map((car) =>
-                        <div key={car.id} className="w-[200px]">
-                            <div className="flex gap-2 items-center ">
-                                <CarControlEvents car={car}/>
-                                <div
-                                    key={car.id}
-                                    data-id={car.id}
-                                    ref={(element) => {
-                                        if (element != null) {
-                                            const index = carList.findIndex(c => c.id === car.id);
-                                            if (index !== -1) {
-                                                carsRef.current[index] = element as HTMLDivElement;
-                                            }
+                <CarLoop carList={carList}>
+                    {(car) => (<div key={car.id} className="w-[200px]">
+                        <div className="flex gap-2 items-center ">
+                            <CarControlEvents car={car}/>
+                            <div
+                                key={car.id}
+                                data-id={car.id}
+                                ref={(element) => {
+                                    if (element != null) {
+                                        const index = carList.findIndex(c => c.id === car.id);
+                                        if (index !== -1) {
+                                            carsRef.current[index] = element as HTMLDivElement;
                                         }
-                                    }}
+                                    }
+                                }}
 
-                                    className="w-[70px] h-[70px]">
-                                    <CarSvg color={car.color}/>
-                                </div>
-
+                                className="w-[70px] h-[70px]">
+                                <CarSvg color={car.color}/>
                             </div>
+
                         </div>
-                    )
-                }
+                    </div>)}
+                </CarLoop>
+
             </div>
             <div className="line-start w-[30px] flex items-center border-r border-l border-solid">
                 <h2 className="text-[30px] [writing-mode:sideways-rl] m-[-8px]">START</h2>

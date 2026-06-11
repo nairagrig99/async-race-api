@@ -10,4 +10,5 @@ export default function WinnersPage() {
     return <div>
         <h2 className="text-[45px] mb-3">WINNERS</h2>
         <WinnersTable/>
-    </div>}
+    </div>
+}
