@@ -2,23 +2,22 @@ import {useDispatch} from "react-redux";
 import type {AppDispatch} from "./store/store.ts";
 import {useEffect} from "react";
 import {getCars} from "./services/GarageService.ts";
-import {Outlet} from "react-router-dom";
 import Menu from "./components/shared/Menu.tsx";
 import {getWinners} from "./services/WinnersService.ts";
-
+import {Outlet} from "react-router-dom";
 
 function App() {
-  const dispatch = useDispatch<AppDispatch>();
+    const dispatch = useDispatch<AppDispatch>();
 
-  useEffect(() => {
-    dispatch(getCars());
-    dispatch(getWinners());
-  }, [dispatch])
+    useEffect(() => {
+        dispatch(getCars());
+        dispatch(getWinners());
+    }, [dispatch])
 
-  return <div className="p-10">
-    <Menu/>
-    <Outlet/>
-  </div>
+    return <div className="p-10">
+        <Menu/>
+        <Outlet/>
+    </div>
 }
 
 export default App

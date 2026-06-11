@@ -8,9 +8,9 @@ export const store = configureStore({
     reducer: {
         carSlice: carSlice,
         engineStateSlice: engineStateSlice,
-        carRaceStartSlice:carRaceStartSlice,
-        modalSlice:modalSlice,
-        winnerSlice:WinnerSlice
+        carRaceStartSlice: carRaceStartSlice,
+        modalSlice: modalSlice,
+        winnerSlice: WinnerSlice
     }
 })
 export type RootState = ReturnType<typeof store.getState>;

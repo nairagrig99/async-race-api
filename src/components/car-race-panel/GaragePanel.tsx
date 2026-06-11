@@ -8,7 +8,7 @@ import {resetEngineState} from "../../store/EngineState.ts";
 import PaginationPanel from "./PaginationPanel.tsx";
 import {Pagination} from "../../enums/pagination.ts";
 import {PageContext} from "../../contextStore/PageContext.tsx";
-
+import CarLoop from "./CarLoop.tsx";
 
 type racingState = {
     racingPanel: (paginatedCar: HTMLDivElement[]) => void
@@ -23,6 +23,7 @@ export default function CarPanel({racingPanel}: racingState) {
     const dispatch = useDispatch<AppDispatch>()
 
     useEffect(() => {
+        dispatch(resetEngineState());
         dispatch(resetEngineState());
         savedPage.pageState(page)
     }, [page, dispatch]);
@@ -52,58 +53,52 @@ export default function CarPanel({racingPanel}: racingState) {
     return <div className="border border-solid border-r-0">
         <div className="flex border border-solid  border-r-0 pl-2.5 relative pt-2.5">
             <div>
-                {carList.length > 0 &&
-                    carList.map((car) =>
-                        <div key={car.id} className="w-[200px]">
-                            <div className="flex gap-2 items-center ">
-                                <CarControlEvents car={car}/>
-                                <div
-                                    key={car.id}
-                                    data-id={car.id}
-                                    ref={(element) => {
-                                        if (element != null) {
-                                            const index = carList.findIndex(c => c.id === car.id);
-                                            if (index !== -1) {
-                                                carsRef.current[index] = element as HTMLDivElement;
-                                            }
+                <CarLoop carList={carList}>
+                    {(car) => (<div key={car.id} className="w-[200px]">
+                        <div className="flex gap-2 items-center ">
+                            <CarControlEvents car={car}/>
+                            <div
+                                key={car.id}
+                                data-id={car.id}
+                                ref={(element) => {
+                                    if (element != null) {
+                                        const index = carList.findIndex(c => c.id === car.id);
+                                        if (index !== -1) {
+                                            carsRef.current[index] = element as HTMLDivElement;
                                         }
-                                    }}
+                                    }
+                                }}
 
-                                    className="w-[70px] h-[70px]">
-                                    <CarSvg color={car.color}/>
-                                </div>
-
+                                className="w-[70px] h-[70px]">
+                                <CarSvg color={car.color}/>
                             </div>
+
                         </div>
-                    )
-                }
+                    </div>)}
+                </CarLoop>
+
             </div>
             <div className="line-start w-[30px] flex items-center border-r border-l border-solid">
                 <h2 className="text-[30px] [writing-mode:sideways-rl] m-[-8px]">START</h2>
             </div>
 
             <div className="w-full">
-                {carList.length > 0 &&
-                    carList.map((car) =>
-                        <div key={car.id}
-                             className=" flex items-center pl-5 text-[24px] uppercase text-[#c0c0b8] line-street h-[70px] border-b border-solid w-full">
-                            {car.name}
-                        </div>
-                    )
-                }
+                <CarLoop carList={carList}>
+                    {(car) => (<div
+                        className=" flex items-center pl-5 text-[24px] uppercase text-[#c0c0b8] line-street h-[70px] border-b border-solid w-full">
+                        {car.name}
+                    </div>)}
+                </CarLoop>
+
             </div>
 
             <div className="line-start w-[30px] flex items-center border-r border-l border-solid">
                 <h2 className="text-[30px] [writing-mode:sideways-rl] m-[-8px]">FINISH</h2>
             </div>
             <div className="w-[40px]">
-                {carList.length > 0 &&
-                    carList.map((car) =>
-                        <div key={car.id}
-                             className="flex  line-street h-[70px] border-b border-solid w-full">
-                        </div>
-                    )
-                }
+                <CarLoop carList={carList}>
+                    <div className="flex  line-street h-[70px] border-b border-solid w-full"></div>
+                </CarLoop>
             </div>
         </div>
         <PaginationPanel garageLength={garageLength} page={page} pagination={pagination} paginationName='Garage'/>

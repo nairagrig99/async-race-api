@@ -23,8 +23,8 @@ const engineStateSlice = createSlice({
         stopRace: (state, action) => {
             state.stop_race = action.payload;
         },
-        resetEngineState: () => initialState,
+        resetEngineState: () => initialState
     }
 })
-export const {startCar, stopCar, startRaceMode, stopRace,resetEngineState} = engineStateSlice.actions
+export const {startCar, stopCar, startRaceMode, stopRace, resetEngineState} = engineStateSlice.actions
 export default engineStateSlice.reducer

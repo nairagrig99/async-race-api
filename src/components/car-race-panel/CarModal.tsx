@@ -1,6 +1,6 @@
 import {useDispatch, useSelector} from "react-redux";
 import type {AppDispatch, RootState} from "../../store/store.ts";
-import {useContext, useEffect, useRef} from "react";
+import {memo, useContext, useEffect, useRef} from "react";
 import {resetEngineState, startCar, startRaceMode, stopCar, stopRace} from "../../store/EngineState.ts";
 import {ButtonType} from "../../enums/button-type.ts";
 import {CAR_BRANDS, CAR_MODELS, MAX_TIME_HIDDEN, PAGE_END, RGB_COLOR} from "../../constants/constant.ts";
@@ -16,26 +16,18 @@ import {setWinners, updateWinners} from "../../services/WinnersService.ts";
 import {EngineService} from "../../services/EngineService.ts";
 import {WinnerModalContext} from "../../contextStore/WinnerModalContext.tsx";
 
-export default function CarModal({carListRace}: RacingState) {
+const CarModal = memo(({carListRace}: RacingState) => {
     const dispatch = useDispatch<AppDispatch>();
     const selector = useSelector((state: RootState) => state.carRaceStartSlice);
     const engineState = useSelector((state: RootState) => state.engineStateSlice);
     const winners = useSelector((state: RootState) => state.winnerSlice.winners);
     const carList = useSelector((state: RootState) => state.carSlice.car);
-
     const winnerContext = useContext(WinnerModalContext)
     const timeOutRef = useRef<Set<number>>(new Set());
+
     let firstIsWinner = 1;
 
-    useEffect(() => {
-        return () => {
-            dispatch(resetEngineState());
-        }
-    }, [engineState]);
-
-
-    const getRandomColor = () => "#" + Math.floor(Math.random() * RGB_COLOR).toString(16).padStart(6, "0")
-
+    const getRandomColor = () => "#" + Math.floor(Math.random() * RGB_COLOR).toString(16).padStart(6, "0");
     const createRandomCars = () => {
         const carList = [];
 
@@ -122,7 +114,8 @@ export default function CarModal({carListRace}: RacingState) {
         timeOutRef.current.add(timeout)
     }
 
-    const startRace = (el: HTMLElement, id: number, isIndividualCar: boolean = true) => {
+
+    function startRace(el: HTMLElement, id: number, isIndividualCar: boolean = true) {
 
         fetch(`${ServerURL.URL}/engine?id=${id}&status=started`, {method: "PATCH"})
             .then(async (res) => {
@@ -140,15 +133,16 @@ export default function CarModal({carListRace}: RacingState) {
                     if (!driveRes.ok && driveRes.status === 500) {
                         isWinnerBroken = false;
                         stopRacingOnTheWay(el);
-                        dispatch(EngineService(id))
+                        dispatch(EngineService(id));
                     }
                 });
-
             return {durationSeconds, isWinnerBroken}
         }).then(({durationSeconds, isWinnerBroken}) => {
+            console.log("IS THISSSSSSSSS");
             const carElement = el.querySelector(".race-car") as HTMLElement;
             carElement.style.position = "absolute";
             carElement.style.animation = `moveRight ${durationSeconds}s linear forwards`;
+
             const handleAnimationEnd = () => {
                 carElement.removeEventListener("animationend", handleAnimationEnd);
                 if (firstIsWinner === 1 && isWinnerBroken && isIndividualCar) {
@@ -157,20 +151,21 @@ export default function CarModal({carListRace}: RacingState) {
                         time: durationSeconds,
                         wins: 1,
                     });
+                    dispatch(resetEngineState());
+                    // carListRace.forEach((el) => {
+                    //     stopRacingOnTheWay(el)
+                    // })
                 } else {
                     dispatch(EngineService(id))
                 }
                 firstIsWinner++;
-
             };
             carElement.addEventListener("animationend", handleAnimationEnd);
         })
     };
 
     const stopRacingOnTheWay = (el: HTMLElement) => {
-        if (el) {
-            (el.querySelector(".race-car") as HTMLElement).style.animationPlayState = 'paused';
-        }
+        if (el) (el.querySelector(".race-car") as HTMLElement).style.animationPlayState = 'paused';
     }
 
     const stopRacing = (el: HTMLElement) => {
@@ -227,4 +222,5 @@ export default function CarModal({carListRace}: RacingState) {
                 value={ButtonType.GENERATE_CARS}/>
 
     </div>
-}
+})
+export default CarModal

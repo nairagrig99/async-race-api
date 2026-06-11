@@ -15,7 +15,7 @@ export const router = createBrowserRouter([
         path: '/async-race-api/',
         element: <App/>,
         children: [
-            { index: true, element: <Navigate to="/async-race-api/garage" replace /> },
+            {index: true, element: <Navigate to="/async-race-api/garage" replace/>},
             {path: 'garage', element: <GaragePage/>},
             {path: 'winners', element: <WinnersPage/>},
         ]

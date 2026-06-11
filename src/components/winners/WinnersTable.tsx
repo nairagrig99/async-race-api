@@ -13,12 +13,14 @@ import {SortEnum} from "../../enums/sort.ts";
 type WinnerWithCar = WinnerModel & CarModelInterface;
 
 export default function WinnersTable() {
+
     const selectWinners = useSelector((state: RootState) => state.winnerSlice.winners);
     const carList = useSelector((state: RootState) => state.carSlice.car);
 
     const [winners, setWinners] = useState<WinnerWithCar[]>([]);
     const [paginatedWinners, setPaginatedWinners] = useState<WinnerWithCar[]>([]);
     const [page, setPage] = useState<number>(PAGE_START);
+
 
     useEffect(() => {
         if (carList.length && selectWinners.length) {
